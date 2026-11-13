@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="FinGuard AI — Intelligent Financial Fraud Detection & Anti-Money Laundering (AML) Command Center" />
+  <meta name="theme-color" content="#0B1120" />
+  <title>FinGuard AI — AML Command Center</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ============================================================
+       A) TOP NAVIGATION BAR
+  ============================================================ -->
+  <nav id="topNav" role="navigation" aria-label="Primary command navigation">
+    <div class="top-nav-inner">
+      <!-- Left: Logo & Title -->
+      <div class="nav-brand">
+        <div class="nav-logo-icon" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="32" height="32">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+        </div>
+        <div class="nav-brand-text">
+          <h1 class="nav-title">FinGuard AI</h1>
+          <span class="nav-subtitle">AML & Fraud Operations Command Center</span>
+        </div>
+      </div>
+
+      <!-- Center: Live Monitoring Status -->
+      <div class="nav-status-pill" aria-live="polite">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="live-text">Live Monitoring Active</span>
+      </div>
+
+      <!-- Right: Clock & System State -->
+      <div class="nav-right">
+        <time id="currentTime" class="nav-time" aria-label="Current date and time">--:--:-- IST</time>
+        <span class="system-badge">System: ONLINE</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       B) TOP 5 KPI METRICS BAR (5-column CSS Grid)
+  ============================================================ -->
+  <section id="kpiBar" class="kpi-section" aria-label="Key performance indicators">
+    <div class="kpi-grid">
+
+      <!-- Card 1: Total Volume Monitored -->
+      <article class="kpi-card kpi-card--volume" aria-label="Total volume monitored">
+        <p class="kpi-label">Total Volume Monitored</p>
+        <p id="kpiVolume" class="kpi-value">₹0 Cr</p>
+        <p class="kpi-sublabel">Live Scanned Capital</p>
+      </article>
+
+      <!-- Card 2: Transactions Scanned -->
+      <article class="kpi-card kpi-card--scanned" aria-label="Transactions scanned">
+        <p class="kpi-label">Transactions Scanned</p>
+        <p id="kpiScanned" class="kpi-value">0</p>
+        <p class="kpi-sublabel">Throughput / Session</p>
+      </article>
+
+      <!-- Card 3: Critical Fraud Alerts -->
+      <article class="kpi-card kpi-card--critical" aria-label="Critical fraud alerts">
+        <p class="kpi-label">Critical Fraud Alerts</p>
+        <p id="kpiCritical" class="kpi-value">0</p>
+        <p class="kpi-sublabel">Immediate Action Required</p>
+      </article>
+
+      <!-- Card 4: AML Loops Detected -->
+      <article class="kpi-card kpi-card--amber" aria-label="AML loops detected">
+        <p class="kpi-label">AML Loops Detected</p>
+        <p id="kpiAML" class="kpi-value">0</p>
+        <p class="kpi-sublabel">Circular Laundering Rings</p>
+      </article>
+
+      <!-- Card 5: AI Model Precision -->
+      <article class="kpi-card kpi-card--emerald" aria-label="AI model precision">
+        <p class="kpi-label">AI Model Precision</p>
+        <p id="kpiPrecision" class="kpi-value">98.4%</p>
+        <p class="kpi-sublabel">Ensemble XGBoost + GNN</p>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       C) CONTROL TOOLBAR
+  ============================================================ -->
+  <section id="controlBar" class="control-section" aria-label="Control toolbar">
+    <div class="control-bar-inner">
+
+      <!-- Search Input -->
+      <div class="control-search-wrap">
+        <label for="searchInput" class="sr-only">Search transactions</label>
+        <div class="search-input-box">
+          <span class="control-search-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+          </span>
+          <input
+            type="search"
+            id="searchInput"
+            name="searchInput"
+            placeholder="Search by ID, amount, account, city..."
+            class="control-search-input"
+            autocomplete="off"
+            aria-label="Search transactions"
+          />
+        </div>
+      </div>
+
+      <!-- Filter Toggle Tabs -->
+      <div class="filter-tabs" role="group" aria-label="Transaction filter">
+        <button id="filterAll" class="filter-btn active" type="button" aria-pressed="true">All</button>
+        <button id="filterCritical" class="filter-btn" type="button" aria-pressed="false">Critical Alerts</button>
+        <button id="filterAML" class="filter-btn" type="button" aria-pressed="false">AML Patterns</button>
+        <button id="filterSafe" class="filter-btn" type="button" aria-pressed="false">Safe</button>
+      </div>
+
+      <!-- Live Stream & Scenario Actions -->
+      <div class="control-actions">
+        <button id="toggleStream" class="ctrl-btn ctrl-btn--stream" type="button" aria-label="Pause live stream">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true" class="ctrl-btn-icon">
+            <rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>
+          </svg>
+          <span>Pause Stream</span>
+        </button>
+        <button id="injectFraud" class="ctrl-btn ctrl-btn--fraud" type="button" aria-label="Inject fraud burst scenario">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" class="ctrl-btn-icon">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+          <span>⚡ Inject Fraud Burst</span>
+        </button>
+        <button id="injectAML" class="ctrl-btn ctrl-btn--aml" type="button" aria-label="Inject AML laundering ring scenario">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" class="ctrl-btn-icon">
+            <circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/>
+          </svg>
+          <span>🔄 Inject AML Ring</span>
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       D & E & F) MAIN DASHBOARD GRID (Two Column Layout)
+  ============================================================ -->
+  <main id="mainGrid" class="main-dashboard-grid" role="main">
+
+    <!-- ===== LEFT COLUMN (~59% width) ===== -->
+    <div class="dashboard-col dashboard-col--left">
+
+      <!-- D1) Real-Time Transaction Feed Card -->
+      <section class="glass-card feed-card" aria-label="Real-time transaction feed">
+        <header class="card-header">
+          <h2 class="card-title">
+            <span class="card-title-dot card-title-dot--live" aria-hidden="true"></span>
+            Real-Time Transaction Feed
+          </h2>
+          <span class="feed-counter-badge" aria-live="polite" aria-label="Transaction feed count">
+            <span id="txFeedCount">0</span> transactions
+          </span>
+        </header>
+        <!-- Scrollable feed container -->
+        <div
+          id="transactionFeed"
+          class="tx-feed-container"
+          role="feed"
+          aria-label="Live transaction stream"
+          aria-live="polite"
+        ></div>
+      </section>
+
+      <!-- D2) AML Money Flow Network Canvas Card -->
+      <section class="glass-card graph-card" aria-label="AML money flow network graph">
+        <header class="card-header">
+          <h2 class="card-title">AML Money Flow Network</h2>
+          <!-- Graph Legend -->
+          <div class="aml-legend" aria-label="Network graph legend">
+            <span class="aml-legend-item">
+              <span class="aml-legend-dot aml-legend-dot--safe" aria-hidden="true"></span>
+              Safe node
+            </span>
+            <span class="aml-legend-item">
+              <span class="aml-legend-dot aml-legend-dot--flagged" aria-hidden="true"></span>
+              Flagged node
+            </span>
+            <span class="aml-legend-item">
+              <span class="aml-legend-dot aml-legend-dot--loop" aria-hidden="true"></span>
+              Circular loop
+            </span>
+          </div>
+        </header>
+
+        <div class="aml-canvas-wrap">
+          <canvas
+            id="amlCanvas"
+            class="aml-canvas"
+            width="800"
+            height="340"
+            aria-label="AML money flow network diagram"
+            role="img"
+          ></canvas>
+        </div>
+
+        <div class="graph-controls">
+          <button id="runCycleDetect" class="graph-btn graph-btn--detect" type="button" aria-label="Run AML cycle detection algorithm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+            </svg>
+            Run Cycle Detection
+          </button>
+          <button id="resetGraph" class="graph-btn graph-btn--reset" type="button" aria-label="Reset AML network graph">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            </svg>
+            Reset Graph
+          </button>
+        </div>
+      </section>
+
+    </div><!-- end LEFT COLUMN -->
+
+    <!-- ===== RIGHT COLUMN (~41% width) ===== -->
+    <div class="dashboard-col dashboard-col--right">
+
+      <!-- E) Explainable AI (XAI) Investigation Panel -->
+      <section id="xaiPanel" class="glass-card xai-panel" aria-label="AI investigation panel">
+        <header class="card-header">
+          <div>
+            <h2 class="card-title">AI Investigation Panel</h2>
+            <p class="xai-placeholder-text">Explainable AI Risk Breakdown & Compliance Actions</p>
+          </div>
+          <span class="xai-header-badge">SOC Level 3</span>
+        </header>
+
+        <div class="xai-card-body">
+          <!-- Risk Gauge display area -->
+          <div id="riskGauge" class="risk-gauge-wrap" aria-label="Risk gauge visualization"></div>
+          <div class="gauge-meta-center">
+            <span id="riskScoreDisplay" class="gauge-score-display" style="display:none">--</span>
+            <p id="riskClassification" class="risk-classification" aria-live="polite">AWAITING SELECTION</p>
+          </div>
+
+          <!-- Feature Contribution Bars -->
+          <div class="feature-contributions-section">
+            <h3 class="feature-section-heading">Feature Contribution Weights</h3>
+            <div id="featureContributions" class="feature-contributions-container"></div>
+          </div>
+
+          <!-- Plain-English XAI Explanation Box -->
+          <div class="xai-explanation-section">
+            <h3 class="feature-section-heading">Plain-English Explainability Report</h3>
+            <div id="xaiExplanation" class="xai-explanation-box" role="region" aria-live="polite"></div>
+          </div>
+
+          <!-- Interactive Action Buttons -->
+          <div class="xai-actions-row">
+            <button id="freezeBtn" class="action-btn action-btn--freeze" type="button" aria-label="Freeze originating account">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/>
+                <line x1="12" y1="12" x2="12" y2="12"/>
+                <path d="M8 7V5a2 2 0 0 1 4 0v2"/><path d="M16 7V5a2 2 0 0 0-4 0v2"/>
+              </svg>
+              Freeze Account
+            </button>
+            <button id="downloadSAR" class="action-btn action-btn--sar" type="button" aria-label="Download suspicious activity report">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                <polyline points="7 10 12 15 17 10"/>
+                <line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Download SAR Report
+            </button>
+          </div>
+
+          <!-- Selected Transaction Details -->
+          <div class="tx-details-section">
+            <h3 class="feature-section-heading">Transaction Audit Metadata</h3>
+            <div id="selectedTxDetails" class="selected-tx-details"></div>
+          </div>
+        </div>
+      </section><!-- end #xaiPanel -->
+
+      <!-- F) Charts Grid: Trend Chart & Donut Chart -->
+      <div class="charts-grid">
+        <!-- F1) Risk Score Trend Chart -->
+        <section class="glass-card chart-card" aria-label="Risk score trend chart">
+          <header class="card-header">
+            <h2 class="card-title">Risk Trend <span class="card-title-sub">(Last 30)</span></h2>
+          </header>
+          <div class="chart-wrap">
+            <canvas id="riskTrendChart" aria-label="Line chart of transaction risk scores" role="img"></canvas>
+          </div>
+        </section>
+
+        <!-- F2) Alert Category Breakdown Donut Chart -->
+        <section class="glass-card chart-card" aria-label="Alert category breakdown donut chart">
+          <header class="card-header">
+            <h2 class="card-title">Alert Categories</h2>
+          </header>
+          <div class="chart-wrap chart-wrap--donut">
+            <canvas id="categoryDonut" aria-label="Donut chart showing alert distribution" role="img"></canvas>
+          </div>
+        </section>
+      </div>
+
+    </div><!-- end RIGHT COLUMN -->
+
+  </main>
+
+  <!-- ============================================================
+       G) CUSTOM TRANSACTION SIMULATOR — FULL WIDTH
+  ============================================================ -->
+  <section id="simulatorSection" class="simulator-section-wrap" aria-label="Custom transaction AI risk simulator">
+    <div class="glass-card sim-card">
+      <header class="card-header">
+        <div>
+          <h2 class="card-title text-base font-bold flex items-center gap-2">
+            <span class="sim-title-icon" aria-hidden="true">⚗️</span>
+            Test Custom Transaction — AI Risk Simulator
+          </h2>
+          <p class="card-subtitle">Run ad-hoc synthetic transactions against real-time XGBoost + GNN inference engine</p>
+        </div>
+      </header>
+
+      <div class="sim-card-body">
+        <form id="simulatorForm" class="sim-form" novalidate aria-label="Custom transaction simulator form">
+          <div class="sim-form-grid">
+
+            <!-- Sender ID -->
+            <div class="sim-form-field">
+              <label for="simSenderId" class="sim-label">Sender ID</label>
+              <input
+                type="text"
+                id="simSenderId"
+                name="simSenderId"
+                placeholder="USR-8841"
+                class="sim-input"
+                autocomplete="off"
+              />
+            </div>
+
+            <!-- Receiver ID -->
+            <div class="sim-form-field">
+              <label for="simReceiverId" class="sim-label">Receiver ID</label>
+              <input
+                type="text"
+                id="simReceiverId"
+                name="simReceiverId"
+                placeholder="USR-3302"
+                class="sim-input"
+                autocomplete="off"
+              />
+            </div>
+
+            <!-- Amount (₹) -->
+            <div class="sim-form-field">
+              <label for="simAmount" class="sim-label">Amount (₹)</label>
+              <input
+                type="number"
+                id="simAmount"
+                name="simAmount"
+                placeholder="49500"
+                class="sim-input"
+                min="1"
+                step="1"
+              />
+            </div>
+
+            <!-- Payment Mode -->
+            <div class="sim-form-field">
+              <label for="simPaymentMode" class="sim-label">Payment Mode</label>
+              <select id="simPaymentMode" name="simPaymentMode" class="sim-input sim-select">
+                <option value="UPI">UPI</option>
+                <option value="IMPS">IMPS</option>
+                <option value="NEFT">NEFT</option>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Wire Transfer">Wire Transfer</option>
+              </select>
+            </div>
+
+            <!-- Transactions in Last 10 Mins -->
+            <div class="sim-form-field">
+              <label for="simVelocity" class="sim-label">Txns in Last 10 Mins</label>
+              <input
+                type="number"
+                id="simVelocity"
+                name="simVelocity"
+                placeholder="4"
+                class="sim-input"
+                min="0"
+                max="50"
+                step="1"
+              />
+            </div>
+
+            <!-- Pattern Type -->
+            <div class="sim-form-field">
+              <label for="simPattern" class="sim-label">Pattern Type</label>
+              <select id="simPattern" name="simPattern" class="sim-input sim-select">
+                <option value="Normal">Normal</option>
+                <option value="Split Below Rs50k">Split Below ₹50k</option>
+                <option value="Circular Transfer">Circular Transfer</option>
+                <option value="Foreign Midnight Spike">Foreign Midnight Spike</option>
+                <option value="High Velocity Burst">High Velocity Burst</option>
+              </select>
+            </div>
+
+          </div><!-- end sim-form-grid -->
+
+          <!-- Submit Button -->
+          <button
+            id="analyzeBtn"
+            type="submit"
+            class="sim-analyze-btn"
+            aria-label="Analyze custom transaction with AI engine"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true" class="inline-block mr-2">
+              <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+              <polyline points="9 12 11 14 15 10"/>
+            </svg>
+            Analyze with AI Engine
+          </button>
+        </form>
+
+        <!-- Dynamic Results Area (Injected by app.js) -->
+        <div id="simulatorResults" class="sim-results" aria-live="polite" style="display:none"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       H) FOOTER
+  ============================================================ -->
+  <footer class="app-footer" role="contentinfo">
+    <div class="footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18" aria-hidden="true">
+            <path d="M12 2L3 7v5c0 5.25 3.75 10.15 9 11.25C17.25 22.15 21 17.25 21 12V7L12 2z"/>
+            <polyline points="9 12 11 14 15 10"/>
+          </svg>
+          <span class="footer-title">FinGuard AI — AML & Fraud Operations Command Center</span>
+          <span class="footer-version">v2.5.0 Production-Grade</span>
+        </div>
+        <p class="footer-copy">&copy; 2026 FinGuard AI. Designed for Financial Intelligence & Security Operations.</p>
+      </div>
+
+      <div class="footer-disclaimer" role="note">
+        <p>
+          <strong>⚠️ Synthetic Data Disclaimer:</strong> All transaction records, account identifiers (e.g. USR-XXXX), monetary values, geographic hops, and alert sequences shown on this command center are 100% synthetic and algorithmically simulated. This system is a prototype interface designed for Anti-Money Laundering (AML) and Financial Fraud Detection research and educational purposes. No real banking records, PII, or confidential financial credentials are processed.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic (vanilla JS, zero backend dependencies) -->
+  <script src="app.js"></script>
+
+</body>
+</html>
