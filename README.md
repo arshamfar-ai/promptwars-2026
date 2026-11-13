@@ -1,42 +1,51 @@
-# 🛡️ FinGuard AI — Intelligent Financial Fraud Detection & AML Command Center
+# FinGuard AI — Intelligent Financial Fraud Detection & AML Command Center
 
 **PromptWars X AI Challenge Hackathon 2026 | Integral University, Lucknow**  
-🌐 **Live Demo:** https://arshamfar-ai.github.io/promptwars-2026/  
-💻 **GitHub Repository:** https://github.com/arshamfar-ai/promptwars-2026
+- **Live Deployed App:** https://arshamfar-ai.github.io/promptwars-2026/
+- **GitHub Repository:** https://github.com/arshamfar-ai/promptwars-2026
 
 ---
 
-## 📌 Problem Statement & Solution
-**Domain:** FinTech & Financial Security  
-**Objective:** Intelligent Financial Fraud Detection and Anti-Money Laundering (AML) System
-
-Modern digital payment ecosystems (UPI, IMPS, NEFT, Cards) face high-velocity fraud and sophisticated money-laundering techniques—such as **structuring/smurfing** (splitting transfers just below the ₹50,000 KYC reporting threshold) and **circular money-laundering rings**. Legacy rule-based engines generate opaque alerts without clear audit reasoning.
-
-**FinGuard AI** is a real-time **SOC Level 3 FinTech Security Operations Command Center** built using prompt-driven engineering in **Google Antigravity**. It processes synthetic financial transactions in real time, visually isolates laundering rings on a network graph, assigns a 0–100 AI risk score, and generates plain-English **Explainable AI (XAI)** breakdowns alongside downloadable Suspicious Activity Reports (SAR).
+## 1. Chosen Vertical
+**FinTech & Financial Security — Intelligent Financial Fraud Detection and Anti-Money Laundering (AML) System**  
+Designed as a **SOC Level 3 (Senior Threat Hunter)** real-time command center for monitoring digital banking and UPI/NEFT/IMPS payment streams.
 
 ---
 
-## ✨ Key Features
-- **Real-Time Transaction Monitoring Feed:** Live synthetic Indian FinTech stream (UPI, IMPS, NEFT, Credit Card) with live pause/resume toggle, search, and severity filters (`All`, `Critical Alerts`, `AML Patterns`, `Safe`).
-- **One-Click Attack Simulators:**
-  - **⚡ Inject Fraud Burst:** Simulates a 5-transaction smurfing/structuring attack just under ₹50,000.
-  - **🔄 Inject AML Laundering Ring:** Simulates a 4-hop circular money laundering loop across accounts.
-- **Interactive AML Money-Flow Network Graph:** HTML5 Canvas node-link visualization that detects and highlights circular money movement in crimson red, with **Run Cycle Detection** and **Reset Graph** controls.
-- **Explainable AI (XAI) Investigation Panel:** Displays a 0–100 Risk Score Gauge, weighted feature contributions (*Transaction Velocity*, *Amount Deviation*, *Network Graph Match*, *Geo-Location Jump*), plain-English compliance reasoning, **Freeze Account** action, and one-click **SAR (.txt) Report Export**.
-- **Custom Transaction AI Simulator:** Allows analysts and judges to test custom amounts, transfer modes, velocity spikes, and patterns live.
+## 2. Approach and Logic
+Modern digital payment ecosystems face two high-impact financial crime vectors:
+1. **Structuring / Smurfing:** Fraudsters split large sums into rapid transactions just below the **₹50,000 KYC reporting threshold** (e.g., multiple ₹49,500 transfers within 10 minutes).
+2. **Circular Money Laundering Rings:** Illicit funds are routed across closed loops of mule accounts ($A \rightarrow B \rightarrow C \rightarrow D \rightarrow A$) to obscure origin.
+
+**Decision & Scoring Logic:**
+- Every incoming transaction is evaluated across four weighted risk vectors: **Transaction Velocity** (bursts within 10 minutes), **Amount Deviation** (threshold proximity & high-value anomalies), **Circular Network Graph Topology** (depth-first cycle detection across directed account transfers), and **Geo-Location Jumps**.
+- Scores are normalized from `0–100` and classified into `SAFE` (`0–39`), `SUSPICIOUS` (`40–69`), and `CRITICAL` (`70–100`).
+- **Explainable AI (XAI):** Instead of opaque black-box alerts, the engine generates exact percentage feature weights and plain-English compliance summaries for every flagged transaction.
 
 ---
 
-## 🧠 Prompt Engineering Workflow (Google Antigravity)
-1. **System Architecture & Master Prompt (`Claude Sonnet 4.6`):** Defined a zero-backend, self-contained HTML5/CSS3/Vanilla JS + Chart.js architecture so the entire SOC dashboard runs with zero latency and deploys directly to GitHub Pages.
-2. **Responsive SOC Grid & Visual Polish (`Gemini 3.8 Flash High`):** Structured a 5-column real-time KPI header, 2-column command grid, and z-index-safe XAI drawer.
-3. **State & Graph Verification (`Gemini 3.8 Flash High`):** Refined baseline graph reset states, master-array KPI aggregation, and dynamic feed counters.
+## 3. How the Solution Works
+1. **Real-Time Transaction Monitoring Engine (`app.js`):** Streams synthetic Indian financial transactions (UPI, IMPS, NEFT, Credit Card) with live pause/resume controls, instant search, and severity filters (`All`, `Critical Alerts`, `AML Patterns`, `Safe`).
+2. **One-Click Threat Simulation Controls:**
+   - **Inject Fraud Burst:** Simulates a 5-transaction smurfing burst just below ₹50,000.
+   - **Inject AML Ring:** Simulates a 4-hop circular laundering loop across accounts.
+3. **Interactive AML Money-Flow Network Graph:** Renders account nodes and directional payment edges on an HTML5 Canvas, highlighting circular laundering rings in crimson red with **Run Cycle Detection** and **Reset Graph** controls.
+4. **AI Investigation Panel & Compliance Actions:** Clicking any transaction opens its 0–100 Risk Gauge, weighted risk bars, plain-English audit explanation, one-click **Freeze Account** toggle, and automated **Suspicious Activity Report (SAR .txt)** export.
+5. **Custom Transaction AI Simulator:** Allows analysts and judges to input custom sender/receiver IDs, amounts, payment modes, velocity counts, and attack patterns for instant AI risk scoring.
 
 ---
 
-## 🛠️ Tech Stack
-- **AI Development Environment:** Google Antigravity (`Claude Sonnet 4.6` & `Gemini 3.8 Flash High`)
-- **Frontend & Visualization:** HTML5, CSS3, Tailwind CSS, Vanilla JavaScript (ES6+), HTML5 Canvas, Chart.js
-- **Hosting & Deployment:** GitHub & GitHub Pages
+## 4. Assumptions Made
+- **100% Synthetic & Anonymized Data:** All account IDs (`USR-XXXX`), transaction IDs (`TXN-XXXX`), amounts, and geo-locations are synthetically generated for hackathon demonstration; zero real PII or live banking credentials are used.
+- **Regulatory Threshold Baseline:** The ₹50,000 structuring/smurfing threshold models standard Indian banking/FIU-IND KYC reporting rules.
+- **Zero-Backend Edge Execution:** All scoring, cycle detection, and visualization run deterministically in client-side JavaScript (`ES6+`) so the system operates with sub-millisecond latency and zero external API failure risk.
 
-*Disclaimer: All transaction records, account identifiers, and financial metrics displayed in FinGuard AI are 100% synthetic and anonymized for hackathon demonstration purposes.*
+---
+
+## 5. Verification & Automated Testing (`tests.js`)
+Run `node tests.js` (or open `test.html` in any browser) to execute the 5-part automated verification suite validating:
+1. Safe baseline UPI classification (`score < 40`)
+2. ₹49,500 high-velocity smurfing detection (`CRITICAL`, `score >= 70`)
+3. Directed cyclic graph detection for 3-hop and 4-hop AML rings
+4. Acyclic transfer non-false-positive verification
+5. FIU-IND / PMLA Suspicious Activity Report (SAR) payload generation
